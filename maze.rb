@@ -8,7 +8,6 @@ def maze
 	require_relative 'graph'
 	require_relative 'node'
 	require_relative 'edge'
-	require_relative 'dijkstra'
 
 	maze_filename = select_maze
 

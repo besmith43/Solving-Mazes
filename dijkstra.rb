@@ -1,12 +1,13 @@
 require_relative "priority_queue"
 
 class Dijkstra
-  def initialize(graph, source_node, num_nodes)
+  def initialize(graph, source_node)
     @graph = graph
     @source_node = source_node
     @path_to = {}
     @distance_to = {}
     @pq = PriorityQueue.new
+	
 	if $verbose
 		@progress = ProgressBar.create(:title => "Solving the Maze", :total => @graph.edges.count, format: 'Progress %c %C |%b>%i| %a %e')
 	end

@@ -244,7 +244,22 @@ def solve(graph, num_nodes, maze, rows, cols)
 		puts "Solving the Maze"
 	end
 
-	shortest_path = Dijkstra.new(graph, @node1, num_nodes).shortest_path_to(eval("@node#{num_nodes}"))
+	case $method
+	when "dijkstra"
+		require_relative 'dijkstra'
+		shortest_path = Dijkstra.new(graph, @node1).shortest_path_to(eval("@node#{num_nodes}"))
+
+	when "breadth_first_search"
+		require_relative 'breadth_first_search'
+		shortest_path = BreadthFirstSearch.new(graph, @node1).shortest_path_to(eval("@node#{num_nodes}"))
+	when "depth_first_search"
+		require_relative 'depth_first_search'
+		shortest_path = DepthFirstSearch.new(graph, @node1).path_to(eval("@node#{num_nodes}"))
+	else
+		puts ""
+		puts "Invalid Method"
+		exit 1
+	end
 
 	shortest_path
 end
