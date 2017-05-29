@@ -7,7 +7,11 @@ def read_image(png_file)
 	if $verbose
 		puts ""
 		puts "Reading Image from File"
-		prog_bar = ProgressBar.create(:title => "Reading Image from File", :total => rows*cols, format: 'Progress %c %C |%b>%i| %a %e')
+		if $jruby
+			prog_bar = ProgressBar.create(:title => "Reading Image from File", :total => rows*cols)
+		else
+			prog_bar = ProgressBar.create(:title => "Reading Image from File", :total => rows*cols, format: 'Progress %c %C |%b>%i| %a %e')
+		end
 	end
 
 	maze = Array.new(cols) { Array.new(rows) }
@@ -50,7 +54,11 @@ def write_image(maze, rows, cols)
 	if $verbose
 		puts ""
 		puts "Writing Image to File"
-		prog_bar = ProgressBar.create(:title => "Writing Image to File", :total => rows*cols, format: 'Progress %c %C |%b>%i| %a %e')
+		if $jruby
+			prog_bar = ProgressBar.create(:title => "Writing Image to File", :total => rows*cols)
+		else
+			prog_bar = ProgressBar.create(:title => "Writing Image to File", :total => rows*cols, format: 'Progress %c %C |%b>%i| %a %e')
+		end
 	end
 
 	image = ChunkyPNG::Image.new rows, cols
@@ -95,7 +103,11 @@ def get_nodes(maze, rows, cols)
 	if $verbose
 		puts ""
 		puts "Collecting Nodes"
-		prog_bar = ProgressBar.create(:title => "Collecting Nodes", :total => rows*cols, format: 'Progress %c %C |%b>%i| %a %e')
+		if $jruby
+			prog_bar = ProgressBar.create(:title => "Collecting Nodes", :total => rows*cols)
+		else
+			prog_bar = ProgressBar.create(:title => "Collecting Nodes", :total => rows*cols, format: 'Progress %c %C |%b>%i| %a %e')
+		end
 	end
 
 	node_maze = Array.new(cols) { Array.new(rows) {0} }
@@ -246,22 +258,52 @@ def solve(graph, num_nodes, maze, rows, cols)
 
 	case $method
 	when "dijkstra"
-		require_relative 'dijkstra'
-		shortest_path = Dijkstra.new(graph, @node1).shortest_path_to(eval("@node#{num_nodes}"))
+		if $benchmark
+			require 'benchmark'
+			t1 = Benchmark.realtime do
+				require_relative 'dijkstra'
+				@shortest_path = Dijkstra.new(graph, @node1).shortest_path_to(eval("@node#{num_nodes}"))
+			end
 
+			puts "\nDijkstra Time: #{t1}"
+		else
+			require_relative 'dijkstra'
+			@shortest_path = Dijkstra.new(graph, @node1).shortest_path_to(eval("@node#{num_nodes}"))
+		end
+		
 	when "breadth_first_search"
-		require_relative 'breadth_first_search'
-		shortest_path = BreadthFirstSearch.new(graph, @node1).shortest_path_to(eval("@node#{num_nodes}"))
+		if $benchmark
+			require 'benchmark'
+			t1 = Benchmark.realtime do
+				require_relative 'breadth_first_search'
+				@shortest_path = BreadthFirstSearch.new(graph, @node1).shortest_path_to(eval("@node#{num_nodes}"))
+			end
+
+			puts "\nBreadth First Search Time: #{t1}"
+		else
+			require_relative 'breadth_first_search'
+			@shortest_path = BreadthFirstSearch.new(graph, @node1).shortest_path_to(eval("@node#{num_nodes}"))
+		end
 	when "depth_first_search"
-		require_relative 'depth_first_search'
-		shortest_path = DepthFirstSearch.new(graph, @node1).path_to(eval("@node#{num_nodes}"))
+		if $benchmark
+			require 'benchmark'
+			t1 = Benchmark.realtime do
+				require_relative 'depth_first_search'
+				@shortest_path = DepthFirstSearch.new(graph, @node1).path_to(eval("@node#{num_nodes}"))
+			end
+
+			puts "\nDepth First Search Time: #{t1}"
+		else
+			require_relative 'depth_first_search'
+			@shortest_path = DepthFirstSearch.new(graph, @node1).path_to(eval("@node#{num_nodes}"))
+		end
 	else
 		puts ""
 		puts "Invalid Method"
 		exit 1
 	end
 
-	shortest_path
+	@shortest_path
 end
 
 def graph_solution(shortest_path, num_nodes, maze, rows, cols)

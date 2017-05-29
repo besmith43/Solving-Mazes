@@ -6,7 +6,12 @@ class BreadthFirstSearch
     @edge_to = {}
 
 	if $verbose
-		@progress = ProgressBar.create(:title => "Solving the Maze", :total => @graph.edges.count, format: 'Progress %c %C |%b>%i| %a %e')
+		puts ""
+		if $jruby
+			@progress = ProgressBar.create(:title => "Solving the Maze", :total => @graph.nodes.count)
+		else
+			@progress = ProgressBar.create(:title => "Solving the Maze", :total => @graph.nodes.count, format: 'Progress %c %C |%b>%i| %a %e')
+		end
 	end
 
     bfs(source_node)

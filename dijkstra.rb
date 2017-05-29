@@ -9,7 +9,12 @@ class Dijkstra
     @pq = PriorityQueue.new
 	
 	if $verbose
-		@progress = ProgressBar.create(:title => "Solving the Maze", :total => @graph.edges.count, format: 'Progress %c %C |%b>%i| %a %e')
+		puts ""
+		if $jruby
+			@progress = ProgressBar.create(:title => "Solving the Maze", :total => @graph.edges.count)
+		else
+			@progress = ProgressBar.create(:title => "Solving the Maze", :total => @graph.edges.count, format: 'Progress %c %C |%b>%i| %a %e')
+		end
 	end
 
     compute_shortest_path

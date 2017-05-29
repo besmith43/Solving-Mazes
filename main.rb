@@ -3,10 +3,22 @@ params = ARGV
 $help = params.include?("--help")
 $version = params.include?("--version")
 
+if RUBY_PLATFORM == "java"
+	$jruby = true
+else
+	$jruby = false
+end
+
 if params.include?("--verbose") or params.include?("-v")
 	$verbose = true
 else
 	$verbose = false
+end
+
+if params.include?("--benchmark") or params.include?("-b")
+	$benchmark = true
+else
+	$benchmark = false
 end
 
 if params.include?("--method") or params.include?("-m")
