@@ -36,14 +36,24 @@ else
 end
 
 if $help
-	puts "Help was passed"
+	puts ""
+	puts "USAGE: ruby main.rb [options]"
+	puts "	--benchmark			times the process of solving the selected maze"
+	puts "	--method			specifies which pathfinding algorithm to use - defaults to Dijkstra"
+	puts "						breadth_first_search"
+	puts "						depth_first_search"
+	puts "						dijkstra"
+	puts "	--verbose			displays progress bars at various points in the program"
+	puts "	--version			displays the version number"
+	puts "	--help				shows this message"
+	puts ""
 	exit 
 end
 
 if $version
 	puts ""
 	puts "Maze Solver"
-	puts "Version: 0.5"
+	puts "Version: 0.7"
 	puts ""
 	exit
 end
