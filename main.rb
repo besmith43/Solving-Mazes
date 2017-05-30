@@ -47,6 +47,9 @@ if $help
 	puts "	--version			displays the version number"
 	puts "	--help				shows this message"
 	puts ""
+	puts "Example"
+	puts "ruby main.rb --benchmark --verbose --method breadth_first_search"
+	puts ""
 	exit 
 end
 
